@@ -48,18 +48,37 @@ public class FXMLController {
     	this.cmbLocale.getItems().clear();
     	String citta = this.cmbCitta.getValue();
     	if(citta != null) {
-    		//TODO popolare la tendina dei locali per la città selezionata
+    		cmbLocale.getItems().addAll(this.model.getLocaliCitta(citta));
     		
     	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	txtResult.clear();
+    	Business b = cmbLocale.getValue();
+    	if(b==null) {
+    		txtResult.setText("Scegliere un locale, se la tendina è vuota selezionare una citta dall'apposita tendita");
+    		return;
+    	}
+    	String ris = this.model.creaGrafo(b);
+    	txtResult.setText(ris);
+    	List<Review> massimo = this.model.getMassimo();
+    	int max = this.model.getMax();
+    	txtResult.appendText("Review con numero di archi uscenti massimo: "+max+"\n");
+    	for(Review r: massimo)
+    		txtResult.appendText(r.getReviewId()+" "+max+"\n");
     	
     }
 
     @FXML
     void doTrovaMiglioramento(ActionEvent event) {
+    	txtResult.clear();
+    	List<Review> ris = this.model.calcolaPercorso();
+    	double peso = this.model.getPesoOttimo();
+    	txtResult.setText("Ricorsione effettuata!\nNumero giorni tra prima ed ultima review: "+peso+"\n");
+    	for(Review r: ris)
+    		txtResult.appendText(r.toString()+"\n");
     	
     }
 
@@ -75,5 +94,6 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	cmbCitta.getItems().addAll(this.model.getCitta());
     }
 }

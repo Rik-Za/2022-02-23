@@ -126,7 +126,7 @@ public class Review {
 
 	@Override
 	public String toString() {
-		return reviewId;
+		return reviewId +" "+stars;
 	}
 
 	
